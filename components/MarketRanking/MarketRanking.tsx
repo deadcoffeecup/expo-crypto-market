@@ -1,6 +1,6 @@
 import { fetchCombinedMarketData } from '@/services/api';
 import { combineMarketData, MarketData } from '@/types/market';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -10,11 +10,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { PairTile } from './PairTile';
+import { PairTile } from '../PairTile';
 import { styles } from './styles';
 
-type SortOption = 'name' | 'spread';
-type SortDirection = 'asc' | 'desc';
+import {
+  SortDirection,
+  SortOption,
+  useFilteredAndSortedMarketData,
+} from '@/hooks/useFilteredAndSortedMarketData';
 
 export function MarketRanking() {
   const [marketData, setMarketData] = useState<MarketData[]>([]);
@@ -45,51 +48,12 @@ export function MarketRanking() {
     }
   };
 
-  const filteredAndSortedData = useMemo(() => {
-    let filtered = marketData;
-
-    if (searchQuery.trim()) {
-      filtered = marketData.filter((item) =>
-        item.ticker_id.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    filtered.sort((a, b) => {
-      let aValue: string | number | null;
-      let bValue: string | number | null;
-
-      switch (sortOption) {
-        case 'name':
-          aValue = a.ticker_id.toLowerCase();
-          bValue = b.ticker_id.toLowerCase();
-          break;
-        case 'spread':
-          aValue = a.spread_percentage;
-          bValue = b.spread_percentage;
-          break;
-        default:
-          return 0;
-      }
-
-      if (aValue === null && bValue === null) return 0;
-      if (aValue === null) return sortDirection === 'asc' ? 1 : -1;
-      if (bValue === null) return sortDirection === 'asc' ? -1 : 1;
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-
-      return 0;
-    });
-
-    return filtered;
-  }, [marketData, searchQuery, sortOption, sortDirection]);
+  const filteredAndSortedData = useFilteredAndSortedMarketData({
+    marketData,
+    searchQuery,
+    sortOption,
+    sortDirection,
+  });
 
   const handleSort = (option: SortOption) => {
     if (sortOption === option) {
@@ -98,27 +62,6 @@ export function MarketRanking() {
       setSortOption(option);
       setSortDirection('asc');
     }
-  };
-
-  const renderMarketItem = ({ item }: { item: MarketData }) => {
-    return (
-      <View style={styles.marketRow}>
-        <Text style={styles.tickerText}>
-          {item.ticker_id.replace('_', '/')}
-        </Text>
-        <Text style={styles.priceText}>{formatPrice(item.highest_bid)}</Text>
-        <Text style={styles.priceText}>{formatPrice(item.lowest_ask)}</Text>
-        <Text style={styles.spreadText}>
-          {formatSpread(item.spread_percentage)}
-        </Text>
-        <View
-          style={[
-            styles.ragIndicator,
-            { backgroundColor: getRAGColor(item.rag_status) },
-          ]}
-        />
-      </View>
-    );
   };
 
   if (loading) {
@@ -218,29 +161,3 @@ export function MarketRanking() {
     </View>
   );
 }
-
-export const formatPrice = (price: string | null): string => {
-  if (price === null || price === '') return '-';
-
-  const numPrice = parseFloat(price);
-  if (isNaN(numPrice)) return '-';
-
-  return numPrice.toFixed(numPrice < 1 ? 6 : 2);
-};
-
-export const formatSpread = (spread: number | null): string => {
-  if (spread === null) return '-';
-  return `${spread.toFixed(2)}%`;
-};
-export const getRAGColor = (status: string): string => {
-  switch (status) {
-    case 'green':
-      return '#4CAF50';
-    case 'amber':
-      return '#FF9800';
-    case 'red':
-      return '#F44336';
-    default:
-      return '#9E9E9E';
-  }
-};

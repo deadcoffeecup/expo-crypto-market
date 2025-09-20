@@ -1,4 +1,4 @@
-import { MarketRanking } from '@/components/MarketRanking';
+import { MarketRanking } from '@/components/MarketRanking/MarketRanking';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
