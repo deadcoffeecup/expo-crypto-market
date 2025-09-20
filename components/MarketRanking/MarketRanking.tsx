@@ -114,13 +114,11 @@ export function MarketRanking() {
       </ThemedView>
 
       <ThemedView style={styles.headerRow}>
-        <ThemedText style={{ ...styles.headerText, width: '25%' }}>
-          Market
-        </ThemedText>
-        <ThemedText style={styles.headerText}>BID</ThemedText>
-        <ThemedText style={styles.headerText}>ASK</ThemedText>
-        <ThemedText style={styles.headerText}>Spread</ThemedText>
-        <ThemedText style={styles.headerText}>RAG</ThemedText>
+        <ThemedText style={styles.headerMarket}>Market</ThemedText>
+        <ThemedText style={styles.headerBid}>BID</ThemedText>
+        <ThemedText style={styles.headerAsk}>ASK</ThemedText>
+        <ThemedText style={styles.headerSpread}>Spread</ThemedText>
+        <ThemedText style={styles.headerRag}>RAG</ThemedText>
       </ThemedView>
 
       <FlatList
@@ -131,8 +129,8 @@ export function MarketRanking() {
         updateCellsBatchingPeriod={50}
         windowSize={10}
         getItemLayout={(data, index) => ({
-          length: 56,
-          offset: 56 * index,
+          length: 48,
+          offset: 48 * index,
           index,
         })}
         keyExtractor={(item) => item.ticker_id}

@@ -18,22 +18,35 @@ export function useFilteredAndSortedMarketData({
   sortDirection,
 }: UseFilteredAndSortedMarketDataArgs): MarketDataType[] {
   const filteredAndSortedData = useMemo(() => {
-    let filtered = marketData;
+    if (!marketData || marketData.length === 0) {
+      return [];
+    }
+    let filtered = [...marketData];
 
-    if (searchQuery.trim()) {
-      filtered = marketData.filter((item) =>
-        item.ticker_id.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    if (searchQuery && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = marketData.filter((item) => {
+        if (!item.ticker_id || typeof item.ticker_id !== 'string') {
+          return false;
+        }
+        return item.ticker_id.toLowerCase().includes(query);
+      });
     }
 
     filtered.sort((a, b) => {
-      let aValue: string | number | null;
-      let bValue: string | number | null;
+      let aValue: string | number | null = null;
+      let bValue: string | number | null = null;
 
       switch (sortOption) {
         case 'name':
-          aValue = a.ticker_id.toLowerCase();
-          bValue = b.ticker_id.toLowerCase();
+          aValue =
+            a.ticker_id && typeof a.ticker_id === 'string'
+              ? a.ticker_id.toLowerCase()
+              : '';
+          bValue =
+            b.ticker_id && typeof b.ticker_id === 'string'
+              ? b.ticker_id.toLowerCase()
+              : '';
           break;
         case 'spread':
           aValue = a.spread_percentage;
@@ -43,14 +56,13 @@ export function useFilteredAndSortedMarketData({
           return 0;
       }
 
-      if (aValue === null && bValue === null) return 0;
-      if (aValue === null) return sortDirection === 'asc' ? 1 : -1;
-      if (bValue === null) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return sortDirection === 'asc' ? 1 : -1;
+      if (bValue == null) return sortDirection === 'asc' ? -1 : 1;
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
+        const comparison = aValue.localeCompare(bValue);
+        return sortDirection === 'asc' ? comparison : -comparison;
       }
 
       if (typeof aValue === 'number' && typeof bValue === 'number') {
