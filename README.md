@@ -22,6 +22,6 @@
 
 <https://reactnative.dev/docs/environment-setup>
 
-# Expo advantages
+# Expo GO
 
-<https://reactnative.dev/docs/environment-setup>
+<https://docs.expo.dev/tutorial/create-your-first-app/>
