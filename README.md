@@ -12,11 +12,11 @@
    npx expo start
    ```
 
-   3. tests
+3. tests
 
-```bash
-  npm tests
-```
+   ```bash
+   npm test
+   ```
 
 # Environment setup
 
