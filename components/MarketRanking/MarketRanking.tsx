@@ -1,14 +1,15 @@
+import { useThemeColor } from '@/hooks/use-theme-color';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Text,
   TextInput,
   TouchableOpacity,
-  View,
 } from 'react-native';
 import { PairTile } from '../PairTile';
-import { styles } from './styles';
+import { ThemedText } from '../themed-text';
+import { ThemedView } from '../themed-view';
+import { useThemedStyles } from './styles';
 
 import {
   SortDirection,
@@ -22,6 +23,8 @@ export function MarketRanking() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const styles = useThemedStyles();
+  const placeholderTextColor = useThemeColor({}, 'textSecondary');
 
   const filteredAndSortedData = useFilteredAndSortedMarketData({
     marketData,
@@ -41,37 +44,39 @@ export function MarketRanking() {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
+      <ThemedView style={styles.centerContainer}>
         <ActivityIndicator size='large' color='#007AFF' />
-        <Text style={styles.loadingText}>Loading market data...</Text>
-      </View>
+        <ThemedText style={styles.loadingText}>
+          Loading market data...
+        </ThemedText>
+      </ThemedView>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>Error: {error}</Text>
+      <ThemedView style={styles.centerContainer}>
+        <ThemedText style={styles.errorText}>Error: {error}</ThemedText>
         <TouchableOpacity style={styles.retryButton} onPress={refetch}>
-          <Text style={styles.retryButtonText}>Retry</Text>
+          <ThemedText style={styles.retryButtonText}>Retry</ThemedText>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
           placeholder='Search markets...'
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholderTextColor='#666'
+          placeholderTextColor={placeholderTextColor}
         />
-      </View>
+      </ThemedView>
 
-      <View style={styles.sortContainer}>
+      <ThemedView style={styles.sortContainer}>
         <TouchableOpacity
           style={[
             styles.sortButton,
@@ -79,7 +84,7 @@ export function MarketRanking() {
           ]}
           onPress={() => handleSort('name')}
         >
-          <Text
+          <ThemedText
             style={[
               styles.sortButtonText,
               sortOption === 'name' && styles.sortButtonTextActive,
@@ -87,7 +92,7 @@ export function MarketRanking() {
           >
             Name{' '}
             {sortOption === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -96,7 +101,7 @@ export function MarketRanking() {
           ]}
           onPress={() => handleSort('spread')}
         >
-          <Text
+          <ThemedText
             style={[
               styles.sortButtonText,
               sortOption === 'spread' && styles.sortButtonTextActive,
@@ -104,17 +109,19 @@ export function MarketRanking() {
           >
             Spread{' '}
             {sortOption === 'spread' && (sortDirection === 'asc' ? '↑' : '↓')}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
 
-      <View style={styles.headerRow}>
-        <Text style={{ ...styles.headerText, width: '25%' }}>Market</Text>
-        <Text style={styles.headerText}>BID</Text>
-        <Text style={styles.headerText}>ASK</Text>
-        <Text style={styles.headerText}>Spread</Text>
-        <Text style={styles.headerText}>RAG</Text>
-      </View>
+      <ThemedView style={styles.headerRow}>
+        <ThemedText style={{ ...styles.headerText, width: '25%' }}>
+          Market
+        </ThemedText>
+        <ThemedText style={styles.headerText}>BID</ThemedText>
+        <ThemedText style={styles.headerText}>ASK</ThemedText>
+        <ThemedText style={styles.headerText}>Spread</ThemedText>
+        <ThemedText style={styles.headerText}>RAG</ThemedText>
+      </ThemedView>
 
       <FlatList
         data={filteredAndSortedData}
@@ -133,6 +140,6 @@ export function MarketRanking() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
       />
-    </View>
+    </ThemedView>
   );
 }

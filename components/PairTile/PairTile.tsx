@@ -1,27 +1,33 @@
 import { MarketDataType } from '@/types/market';
 import React from 'react';
-import { Text, View } from 'react-native';
 import { MarketDataModel, PRICE_MODE } from '../../models/MarketDataModel';
-import { styles } from './styles';
+import { ThemedText } from '../themed-text';
+import { ThemedView } from '../themed-view';
+import { useThemedStyles } from './styles';
 
 export const PairTile = ({ item }: { item: MarketDataType }) => {
   const marketDataModel = new MarketDataModel(item);
+  const styles = useThemedStyles();
   return (
-    <View style={styles.marketRow}>
-      <Text style={styles.tickerText}>{marketDataModel.getTickerText()}</Text>
-      <Text style={styles.priceText}>
+    <ThemedView style={styles.marketRow}>
+      <ThemedText style={styles.tickerText}>
+        {marketDataModel.getTickerText()}
+      </ThemedText>
+      <ThemedText style={styles.priceText}>
         {marketDataModel.getPrice(PRICE_MODE.HIGHEST_BID)}
-      </Text>
-      <Text style={styles.priceText}>
+      </ThemedText>
+      <ThemedText style={styles.priceText}>
         {marketDataModel.getPrice(PRICE_MODE.LOWEST_ASK)}
-      </Text>
-      <Text style={styles.spreadText}>{marketDataModel.getSpread()}</Text>
-      <View
+      </ThemedText>
+      <ThemedText style={styles.spreadText}>
+        {marketDataModel.getSpread()}
+      </ThemedText>
+      <ThemedView
         style={[
           styles.ragIndicator,
           { backgroundColor: marketDataModel.getRAGColor() },
         ]}
       />
-    </View>
+    </ThemedView>
   );
 };

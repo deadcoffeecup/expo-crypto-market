@@ -7,10 +7,11 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: 'index',
 };
 
 export default function RootLayout() {
@@ -19,13 +20,21 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='index'
+          options={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: Colors[colorScheme || 'light'].background,
+            },
+          }}
+        />
         <Stack.Screen
           name='modal'
           options={{ presentation: 'modal', title: 'Modal' }}
         />
       </Stack>
-      <StatusBar style='auto' />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </ThemeProvider>
   );
 }
