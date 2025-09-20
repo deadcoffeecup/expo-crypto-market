@@ -1,9 +1,6 @@
-import { fetchCombinedMarketData } from '@/services/api';
-import { combineMarketData, MarketData } from '@/types/market';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Text,
   TextInput,
@@ -18,35 +15,13 @@ import {
   SortOption,
   useFilteredAndSortedMarketData,
 } from '@/hooks/useFilteredAndSortedMarketData';
+import { useMarketData } from '@/hooks/useMarketData';
 
 export function MarketRanking() {
-  const [marketData, setMarketData] = useState<MarketData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { marketData, loading, error, refetch } = useMarketData();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-
-  useEffect(() => {
-    loadMarketData();
-  }, []);
-
-  const loadMarketData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const { pairs, summaries } = await fetchCombinedMarketData();
-      const combinedData = combineMarketData(pairs, summaries);
-      setMarketData(combinedData);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to load market data';
-      setError(errorMessage);
-      Alert.alert('Error', errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const filteredAndSortedData = useFilteredAndSortedMarketData({
     marketData,
@@ -77,7 +52,7 @@ export function MarketRanking() {
     return (
       <View style={styles.centerContainer}>
         <Text style={styles.errorText}>Error: {error}</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={loadMarketData}>
+        <TouchableOpacity style={styles.retryButton} onPress={refetch}>
           <Text style={styles.retryButtonText}>Retry</Text>
         </TouchableOpacity>
       </View>
@@ -161,29 +136,3 @@ export function MarketRanking() {
     </View>
   );
 }
-
-export const formatPrice = (price: string | null): string => {
-  if (price === null || price === '') return '-';
-
-  const numPrice = parseFloat(price);
-  if (isNaN(numPrice)) return '-';
-
-  return numPrice.toFixed(numPrice < 1 ? 6 : 2);
-};
-
-export const formatSpread = (spread: number | null): string => {
-  if (spread === null) return '-';
-  return `${spread.toFixed(2)}%`;
-};
-export const getRAGColor = (status: string): string => {
-  switch (status) {
-    case 'green':
-      return '#4CAF50';
-    case 'amber':
-      return '#FF9800';
-    case 'red':
-      return '#F44336';
-    default:
-      return '#9E9E9E';
-  }
-};

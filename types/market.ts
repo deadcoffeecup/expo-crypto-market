@@ -2,8 +2,6 @@ export interface MarketPair {
   ticker_id: string;
   base: string;
   target: string;
-  pool_id?: string;
-  [key: string]: any;
 }
 
 export type SummaryType = {
@@ -25,7 +23,7 @@ export type TradingSummaryResponse = {
 
 export type RAGStatus = 'green' | 'amber' | 'red';
 
-export interface MarketData {
+export interface MarketDataType {
   ticker_id: string;
   highest_bid: string | null;
   lowest_ask: string | null;
@@ -69,7 +67,7 @@ export function getRAGStatus(spreadPercentage: number | null): RAGStatus {
 export function combineMarketData(
   pairs: MarketPair[],
   summaries: SummaryType[]
-): MarketData[] {
+): MarketDataType[] {
   const summaryMap = new Map<string, SummaryType>();
   summaries.forEach((summary) => {
     summaryMap.set(summary.trading_pairs, summary);

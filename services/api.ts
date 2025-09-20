@@ -5,8 +5,6 @@ export interface MarketPair {
   ticker_id: string;
   base: string;
   target: string;
-  pool_id?: string;
-  [key: string]: any;
 }
 
 export async function fetchMarketPairs(): Promise<MarketPair[]> {

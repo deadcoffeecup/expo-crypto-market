@@ -1,11 +1,11 @@
-import { MarketData } from '@/types/market';
+import { MarketDataType } from '@/types/market';
 import { useMemo } from 'react';
 
 export type SortOption = 'name' | 'spread';
 export type SortDirection = 'asc' | 'desc';
 
 type UseFilteredAndSortedMarketDataArgs = {
-  marketData: MarketData[];
+  marketData: MarketDataType[];
   searchQuery: string;
   sortOption: SortOption;
   sortDirection: SortDirection;
@@ -16,7 +16,7 @@ export function useFilteredAndSortedMarketData({
   searchQuery,
   sortOption,
   sortDirection,
-}: UseFilteredAndSortedMarketDataArgs): MarketData[] {
+}: UseFilteredAndSortedMarketDataArgs): MarketDataType[] {
   const filteredAndSortedData = useMemo(() => {
     let filtered = marketData;
 
