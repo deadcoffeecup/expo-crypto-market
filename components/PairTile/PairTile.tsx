@@ -1,7 +1,11 @@
 import { MarketData } from '@/types/market';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { formatPrice, formatSpread, getRAGColor } from '../MarketRanking';
+import {
+  formatPrice,
+  formatSpread,
+  getRAGColor,
+} from '../MarketRanking/MarketRanking';
 import { styles } from './styles';
 
 export const PairTile = ({ item }: { item: MarketData }) => {
