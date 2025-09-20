@@ -11,7 +11,6 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
-    // UI element colors
     card: '#f8f9fa',
     border: '#e0e0e0',
     borderLight: '#f0f0f0',
@@ -32,7 +31,6 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
-    // UI element colors
     card: '#2a2d2f',
     border: '#3a3d3f',
     borderLight: '#404346',

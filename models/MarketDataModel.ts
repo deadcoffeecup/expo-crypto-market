@@ -1,4 +1,4 @@
-import { MarketDataType } from '@/types/market';
+import { MarketDataType, MarketPair } from '@/types/market';
 
 export enum PRICE_MODE {
   HIGHEST_BID = 'highest_bid',
@@ -48,5 +48,12 @@ export class MarketDataModel {
       default:
         return '#9E9E9E';
     }
+  }
+  static getPairs(item: MarketDataType): MarketPair {
+    return {
+      ticker_id: item.ticker_id,
+      base: item.ticker_id.split('_')[0],
+      target: item.ticker_id.split('_')[1],
+    };
   }
 }

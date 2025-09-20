@@ -1,5 +1,8 @@
+import { REFRESH_INTERVAL } from '@/constants/api';
+import { combineMarketData } from '@/helpers/market';
+import { MarketDataModel } from '@/models/MarketDataModel';
 import { fetchCombinedMarketData, fetchMarketSummaries } from '@/services/api';
-import { combineMarketData, MarketDataType } from '@/types/market';
+import { MarketDataType } from '@/types/market';
 import { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 
@@ -7,9 +10,7 @@ export function useMarketData() {
   const [marketData, setMarketData] = useState<MarketDataType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const REFRESH_INTERVAL = 60 * 1000; // API's data is updated every 60 seconds
+  const intervalRef = useRef<number | NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     loadMarketData();
@@ -49,11 +50,9 @@ export function useMarketData() {
       setMarketData((currentData) => {
         if (currentData.length === 0) return currentData;
 
-        const pairs = currentData.map((item) => ({
-          ticker_id: item.ticker_id,
-          base: item.ticker_id.split('_')[0] || '',
-          target: item.ticker_id.split('_')[1] || '',
-        }));
+        const pairs = currentData.map((item) => {
+          return MarketDataModel.getPairs(item);
+        });
 
         return combineMarketData(pairs, summaries);
       });

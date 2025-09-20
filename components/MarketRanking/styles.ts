@@ -86,35 +86,35 @@ export function useThemedStyles() {
       textAlign: 'center',
     },
     headerMarket: {
-      flex: 2, // 40% width
+      flex: 2,
       fontSize: 12,
       fontWeight: 'bold',
       color: textSecondaryColor,
       textAlign: 'left',
     },
     headerBid: {
-      flex: 1, // 20% width
+      flex: 1,
       fontSize: 12,
       fontWeight: 'bold',
       color: textSecondaryColor,
       textAlign: 'center',
     },
     headerAsk: {
-      flex: 1, // 20% width
+      flex: 1,
       fontSize: 12,
       fontWeight: 'bold',
       color: textSecondaryColor,
       textAlign: 'center',
     },
     headerSpread: {
-      flex: 1.2, // 24% width
+      flex: 1.2,
       fontSize: 12,
       fontWeight: 'bold',
       color: textSecondaryColor,
       textAlign: 'center',
     },
     headerRag: {
-      width: 40, // Fixed width for header alignment
+      width: 40,
       fontSize: 12,
       fontWeight: 'bold',
       color: textSecondaryColor,
@@ -131,20 +131,20 @@ export function useThemedStyles() {
       minHeight: 48,
     },
     tickerText: {
-      flex: 2, // 40% width
+      flex: 2,
       fontSize: 14,
       fontWeight: '600',
       color: textColor,
       textAlign: 'left',
     },
     priceText: {
-      flex: 1, // 20% width
+      flex: 1,
       fontSize: 14,
       color: textSecondaryColor,
       textAlign: 'center',
     },
     spreadText: {
-      flex: 1.2, // 24% width
+      flex: 1.2,
       fontSize: 14,
       color: textColor,
       textAlign: 'center',
